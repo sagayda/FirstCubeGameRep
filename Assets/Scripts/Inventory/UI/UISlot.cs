@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Inventory;
+using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -50,20 +51,27 @@ public class UISlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     }
     public void OnRightClick()
     {
+        if (uiInventory.mouseSlot.Slot.isEmpty && inventorySlot.Amount > 1)
+        {
+            IInventoryItem inventoryItem = inventorySlot.item.Clone();
+            inventoryItem.state.Amount = (int)Math.Ceiling(inventorySlot.Amount / 2f);
 
+            inventorySlot.Amount -= inventoryItem.state.Amount;
+            uiInventory.mouseSlot.Slot.SetItem(inventoryItem);
+
+            inventorySlot.isChanged = true;
+        }
     }
     public void OnLeftClick()
     {
         if (uiInventory.mouseSlot.Slot.isEmpty)
         {
             InventoryHandler.TransitFromSlotToSlot(this, inventorySlot, uiInventory.mouseSlot.Slot);
-            uiInventory.mouseSlot.Slot.isChanged = true;
             inventorySlot.isChanged = true;
         }
         else
         {
             InventoryHandler.TransitFromSlotToSlot(this, uiInventory.mouseSlot.Slot, inventorySlot);
-            uiInventory.mouseSlot.Slot.isChanged = true;
             inventorySlot.isChanged = true;
         }
     }
