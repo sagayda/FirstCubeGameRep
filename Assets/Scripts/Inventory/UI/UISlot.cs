@@ -34,18 +34,11 @@ public class UISlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (uiInventory.mouseSlot.Slot.isEmpty)
-        {
-            InventoryHandler.TransitFromSlotToSlot(this, inventorySlot, uiInventory.mouseSlot.Slot);
-            uiInventory.mouseSlot.Slot.isChanged = true;
-            inventorySlot.isChanged= true;
-        }
-        else
-        {
-            InventoryHandler.TransitFromSlotToSlot(this, uiInventory.mouseSlot.Slot, inventorySlot);
-            uiInventory.mouseSlot.Slot.isChanged = true;
-            inventorySlot.isChanged= true;
-        }
+        if (eventData.button == PointerEventData.InputButton.Left)
+            OnLeftClick();
+
+        if(eventData.button == PointerEventData.InputButton.Right) 
+            OnRightClick();
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -54,6 +47,25 @@ public class UISlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     public void OnPointerExit(PointerEventData eventData)
     {
         slotImage.color = colorDefault;
+    }
+    public void OnRightClick()
+    {
+
+    }
+    public void OnLeftClick()
+    {
+        if (uiInventory.mouseSlot.Slot.isEmpty)
+        {
+            InventoryHandler.TransitFromSlotToSlot(this, inventorySlot, uiInventory.mouseSlot.Slot);
+            uiInventory.mouseSlot.Slot.isChanged = true;
+            inventorySlot.isChanged = true;
+        }
+        else
+        {
+            InventoryHandler.TransitFromSlotToSlot(this, uiInventory.mouseSlot.Slot, inventorySlot);
+            uiInventory.mouseSlot.Slot.isChanged = true;
+            inventorySlot.isChanged = true;
+        }
     }
     public void Refresh()
     {
