@@ -61,6 +61,14 @@ public class UISlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
 
             inventorySlot.isChanged = true;
         }
+
+        if (!uiInventory.mouseSlot.Slot.isEmpty && inventorySlot.isEmpty && uiInventory.mouseSlot.Slot.Amount > 1)
+        {
+            var itemToSlot = uiInventory.mouseSlot.Slot.item.Clone();
+            itemToSlot.state.Amount = 1;
+            uiInventory.mouseSlot.Slot.Amount -= 1;
+            inventorySlot.SetItem(itemToSlot);
+        }
     }
     public void OnLeftClick()
     {
