@@ -73,7 +73,7 @@ public class UIInventory : MonoBehaviour
     public void CloseUI()
     {
         if (!mouseSlot.Slot.isEmpty)
-            if (InventoryHandler.TryToAddToInventory(this, openedInventory, mouseSlot.Slot.item))
+            if (InventoryHandler.TryTransferToInventory(this, openedInventory, mouseSlot.Slot.item))
                 mouseSlot.Slot.Clear();
 
         uiWindow.SetActive(false);
