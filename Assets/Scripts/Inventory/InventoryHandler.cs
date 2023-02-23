@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static UnityEditor.Progress;
 
 static class InventoryHandler
 {
@@ -57,22 +58,22 @@ static class InventoryHandler
     {
         return inventory.slots.ToArray();
     }
-    public static bool TryToAddToInventory(object sender, InventoryWithSlots inventory, IInventoryItem itemToAdd)
+    public static bool TryTransferToInventory(object sender, InventoryWithSlots inventory, IInventoryItem itemToAdd)
     {
         if (itemToAdd == null)
             return false;
 
         IInventorySlot[] slotsWithSameItem = FindAllSlots(sender, inventory, itemToAdd.info.id);
         for (int i = 0; i < slotsWithSameItem?.Length; i++)
-            if (TryToAddToSlot(sender, slotsWithSameItem[i], itemToAdd))
+            if (TryTransferToSlot(sender, slotsWithSameItem[i], itemToAdd))
                 return true;
 
-        if (TryToAddToSlot(sender, FindSlot(sender, inventory, slot => slot.isEmpty), itemToAdd))
+        if (TryTransferToSlot(sender, FindSlot(sender, inventory, slot => slot.isEmpty), itemToAdd))
             return true;
 
         return false;
     }
-    public static bool TryToAddToSlot(object sender, IInventorySlot slot, IInventoryItem item)
+    public static bool TryTransferToSlot(object sender, IInventorySlot slot, IInventoryItem item)
     {
         if (item == null || slot == null)
             return false;
@@ -100,6 +101,27 @@ static class InventoryHandler
         slot.Amount += amountCanAdd;
         item.state.Amount -= amountCanAdd;
         return false;
+    }
+    public static bool AddToSlot(object sender, IInventorySlot slot, IInventoryItem item)
+    {
+        if (item == null || slot == null)
+            return false;
+
+        if (slot.isEmpty)
+        {
+            slot.SetItem(item);
+            return true;
+        }
+
+        if (slot.isFull)
+            return true;
+
+        if (slot.itemId != item.info.id)
+            return false;
+
+        int totalItemAmount = slot.Amount + item.state.Amount;
+        slot.Amount = Math.Clamp(totalItemAmount, 1, slot.Capacity);
+        return true;
     }
     public static void RemoveItem(object sender, InventoryWithSlots inventory, string id, int amount = 0)
     {

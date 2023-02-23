@@ -46,7 +46,7 @@ namespace Assets.Scripts.Abstract
             var rCount = Random.Range(1, 15);
             var apple = new Apple(appleInfo);
             apple.state.Amount = rCount;
-            InventoryHandler.TryToAddToSlot(this, rSlot, apple);
+            InventoryHandler.TryTransferToSlot(this, rSlot, apple);
             return rSlot;
         }
 
@@ -57,7 +57,7 @@ namespace Assets.Scripts.Abstract
             var rCount = Random.Range(1, 15);
             var pepper = new Pepper(pepperInfo);
             pepper.state.Amount = rCount;
-            InventoryHandler.TryToAddToSlot(this, rSlot, pepper);
+            InventoryHandler.TryTransferToSlot(this, rSlot, pepper);
             return rSlot;
         }
 
