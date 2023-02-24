@@ -51,23 +51,46 @@ public class UISlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     }
     public void OnRightClick()
     {
-        if (uiInventory.mouseSlot.Slot.isEmpty && inventorySlot.Amount > 1)
+        if (uiInventory.mouseSlot.Slot.isEmpty && inventorySlot.isEmpty)
+            return;
+
+        if(uiInventory.mouseSlot.Slot.isEmpty && !inventorySlot.isEmpty)
         {
             IInventoryItem inventoryItem = inventorySlot.item.Clone();
             inventoryItem.state.Amount = (int)Math.Ceiling(inventorySlot.Amount / 2f);
 
             inventorySlot.Amount -= inventoryItem.state.Amount;
-            uiInventory.mouseSlot.Slot.SetItem(inventoryItem);
+            if (inventorySlot.Amount <= 0)
+                inventorySlot.Clear();
 
-            inventorySlot.isChanged = true;
+            uiInventory.mouseSlot.Slot.SetItem(inventoryItem);
+            return;
         }
 
-        if (!uiInventory.mouseSlot.Slot.isEmpty && inventorySlot.isEmpty && uiInventory.mouseSlot.Slot.Amount > 1)
+        if (!uiInventory.mouseSlot.Slot.isEmpty)
         {
-            var itemToSlot = uiInventory.mouseSlot.Slot.item.Clone();
-            itemToSlot.state.Amount = 1;
-            uiInventory.mouseSlot.Slot.Amount -= 1;
-            inventorySlot.SetItem(itemToSlot);
+            if (inventorySlot.isEmpty)
+            {
+                inventorySlot.SetItem(uiInventory.mouseSlot.Slot.item.Clone());
+                inventorySlot.Amount = 1;
+                uiInventory.mouseSlot.Slot.Amount -= 1;
+                if (uiInventory.mouseSlot.Slot.Amount <= 0)
+                    uiInventory.mouseSlot.Slot.Clear();
+                return;
+            }
+
+            if (uiInventory.mouseSlot.Slot.itemId == inventorySlot.itemId)
+            {
+                if (inventorySlot.Amount == inventorySlot.Capacity)
+                    return;
+
+                inventorySlot.Amount += 1;
+                uiInventory.mouseSlot.Slot.Amount -= 1;
+                if (uiInventory.mouseSlot.Slot.Amount <= 0)
+                    uiInventory.mouseSlot.Slot.Clear();
+
+                return;
+            }
         }
     }
     public void OnLeftClick()

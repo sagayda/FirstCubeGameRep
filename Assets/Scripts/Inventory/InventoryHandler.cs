@@ -300,5 +300,21 @@ static class InventoryHandler
         else
             fromSlot.Amount = amountLeft;
     }
+    public static void TransitFromSlotToSlot(object sender, IInventorySlot fromSlot, IInventorySlot toSlot, int amountToTransit)
+    {
+        if (fromSlot == toSlot)
+            return;
+
+        if (fromSlot.isEmpty)
+            return;
+
+        if (toSlot.isFull)
+            return;
+
+        if (!toSlot.isEmpty && fromSlot.itemId != toSlot.itemId)
+        {
+
+        }
+    }
 }
 
